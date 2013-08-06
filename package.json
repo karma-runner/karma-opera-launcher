@@ -28,6 +28,6 @@
     "grunt-auto-release": "~0.0.3"
   },
   "contributors": [
-    "Vojta Jina <vojta.jina@gmail.com>"
+    "Friedel Ziegelmayer <friedel.ziegelmayer@gmail.com>"
   ]
 }
