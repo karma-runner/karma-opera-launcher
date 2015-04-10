@@ -1,4 +1,5 @@
 var fs = require('fs');
+var path = require('path');
 
 
 var PREFS =
@@ -58,13 +59,86 @@ var OperaBrowser = function(baseBrowserDecorator) {
   };
 };
 
+var findWindowsOperaExecutable = function (){
+
+  // First we need the directory where Opera is installed.
+  var operaPath = undefined;
+
+  var defaultPaths = [
+    process.env['ProgramFiles'],
+    process.env['ProgramFiles(X86)']
+  ];
+
+  var executable = null;
+  var found = defaultPaths.some(function (progFiles){
+    var oP = path.join(progFiles, 'Opera');
+    try {
+      //console.log('Checking ' + oP + ' ...');
+      fs.statSync(oP);
+      //console.log('Found opera directory at ' + oP);
+      operaPath = oP;
+      return true;
+    } catch (e) {
+      return false;
+    }
+  });
+
+  if (!found) {
+    //console.log('No opera directory found');
+    return null;
+  }
+
+  // Check if there is an opera.exe
+  try {
+    executable = path.join(operaPath, 'opera.exe');
+    //console.log('Checking ' + executable + ' ...');
+    fs.statSync(executable);
+    return executable;
+  } catch (e) {}
+
+  // If not, check the directories inside Opera; the directory structure is, for example,
+  // Opera
+  // + 20.0.1750.51
+  //   + opera.exe
+  // i.e. opera is in a versioned directory, so we have to scan them.
+  found = fs.readdirSync(operaPath)
+    .map(function (name){
+      return path.join(operaPath, name);
+    })
+    .filter(function (name){
+      return fs.statSync(name).isDirectory();
+    })
+    .sort()
+    .some(function (dir){
+      executable = path.join(dir, 'opera.exe');
+
+      try {
+        //console.log('Testing ' + executable + ' ...');
+        if (fs.statSync(executable).isFile()) {
+          //console.log('Opera found: ' + executable);
+          return true;
+        }
+      } catch (e) {
+        //console.log('Not found');
+      }
+    });
+
+  if (found) {
+    // Weeee!
+    return executable;
+  }
+
+  return null;
+
+};
+
 OperaBrowser.prototype = {
   name: 'Opera',
 
   DEFAULT_CMD: {
     linux: 'opera',
     darwin: '/Applications/Opera.app/Contents/MacOS/Opera',
-    win32: process.env.ProgramFiles + '\\Opera\\opera.exe'
+    win32: findWindowsOperaExecutable()
   },
   ENV_CMD: 'OPERA_BIN'
 };

@@ -1,6 +1,6 @@
 {
   "name": "karma-opera-launcher",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A Karma plugin. Launcher for Opera.",
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,7 @@
     "grunt-auto-release": "~0.0.3"
   },
   "contributors": [
-    "Friedel Ziegelmayer <friedel.ziegelmayer@gmail.com>"
+    "Friedel Ziegelmayer <friedel.ziegelmayer@gmail.com>",
+    "Simon A. Eugster <simon.eu@gmail.com>"
   ]
 }
