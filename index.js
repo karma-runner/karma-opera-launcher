@@ -41,6 +41,10 @@ var findWindowsOperaExecutable = function () {
 
   var executable = null
   var found = defaultPaths.some(function (progFiles) {
+    if (progFiles === undefined) {
+      return false
+    }
+
     var oP = path.join(progFiles, 'Opera')
     try {
       fs.statSync(oP)
