@@ -1,7 +1,7 @@
 var fs = require('fs')
 var path = require('path')
 
-var PREFS = fs.readFileSync('./config/prefs.ini')
+var PREFS = fs.readFileSync(path.join(__dirname, '/config/prefs.ini'))
 
 var OperaBrowser = function (baseBrowserDecorator) {
   baseBrowserDecorator(this)
