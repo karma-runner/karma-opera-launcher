@@ -33,8 +33,11 @@
     "load-grunt-tasks": "^3.2.0"
   },
   "contributors": [
-    "Friedel Ziegelmayer <friedel.ziegelmayer@gmail.com>",
     "dignifiedquire <dignifiedquire@gmail.com>",
-    "Simon A. Eugster <simon.eugster@eps.ch>"
+    "Friedel Ziegelmayer <friedel.ziegelmayer@gmail.com>",
+    "Friedel Ziegelmayer <dignifiedquire@gmail.com>",
+    "Christoph Guttandin <chrisguttandin@media-codings.com>",
+    "Simon A. Eugster <simon.eugster@eps.ch>",
+    "Zohar Arad <zohar@zohararad.com>"
   ]
 }
