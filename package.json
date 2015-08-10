@@ -1,6 +1,6 @@
 {
   "name": "karma-opera-launcher",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A Karma plugin. Launcher for Opera.",
   "main": "index.js",
   "scripts": {
