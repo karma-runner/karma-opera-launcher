@@ -1,7 +1,7 @@
 var fs = require('fs')
 var path = require('path')
 
-var PREFS = fs.readFileSync('./config/prefs.ini')
+var PREFS = fs.readFileSync(path.join(__dirname, '/config/prefs.ini'))
 
 var OperaBrowser = function (baseBrowserDecorator) {
   baseBrowserDecorator(this)
@@ -41,6 +41,10 @@ var findWindowsOperaExecutable = function () {
 
   var executable = null
   var found = defaultPaths.some(function (progFiles) {
+    if (progFiles === undefined) {
+      return false
+    }
+
     var oP = path.join(progFiles, 'Opera')
     try {
       fs.statSync(oP)
