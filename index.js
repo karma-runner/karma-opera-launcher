@@ -1,36 +1,24 @@
 var fs = require('fs')
 var path = require('path')
-
 var PREFS = fs.readFileSync(path.join(__dirname, '/config/prefs.ini'))
+var OperaClassicBrowser
+var OperaBrowser
+var DEFAULT_CMD
 
-var OperaBrowser = function (baseBrowserDecorator) {
-  baseBrowserDecorator(this)
-
-  this._getOptions = function (url) {
-    // Opera CLI options
-    // http://www.opera.com/docs/switches/
-    return [
-      '-pd', this._tempDir,
-      '-nomail',
-      url
-    ]
-  }
-
-  this._start = function (url) {
-    var self = this
-
-    var prefsFile = this._tempDir + '/operaprefs.ini'
-    fs.writeFile(prefsFile, PREFS, function (err) {
-      if (err) {
-        console.error('Can not write perferences files')
-        console.error(err)
-      }
-      self._execCommand(self._getCommand(), self._getOptions(url))
-    })
-  }
+function isJSFlags (flag) {
+  return flag.indexOf('--js-flags=') === 0
 }
 
-var findWindowsOperaExecutable = function () {
+function sanitizeJSFlags (flag) {
+  var test = /--js-flags=(['"])/.exec(flag)
+  if (!test) return flag
+  var escapeChar = test[1]
+  var endExp = new RegExp(escapeChar + '$')
+  var startExp = new RegExp('--js-flags=' + escapeChar)
+  return flag.replace(startExp, '--js-flags=').replace(endExp, '')
+}
+
+function findWindowsOperaExecutable () {
   // First we need the directory where Opera is installed.
   var operaPath
 
@@ -100,20 +88,83 @@ var findWindowsOperaExecutable = function () {
 
 }
 
-OperaBrowser.prototype = {
-  name: 'Opera',
+OperaClassicBrowser = function (baseBrowserDecorator) {
+  baseBrowserDecorator(this)
 
-  DEFAULT_CMD: {
-    linux: 'opera',
-    darwin: '/Applications/Opera.app/Contents/MacOS/Opera',
-    win32: findWindowsOperaExecutable()
-  },
+  this._getOptions = function (url) {
+    // Opera CLI options
+    // http://www.opera.com/docs/switches/
+    return [
+      '-pd', this._tempDir,
+      '-nomail',
+      url
+    ]
+  }
+
+  this._start = function (url) {
+    var self = this
+
+    var prefsFile = this._tempDir + '/operaprefs.ini'
+    fs.writeFile(prefsFile, PREFS, function (err) {
+      if (err) {
+        console.error('Can not write perferences files')
+        console.error(err)
+      }
+      self._execCommand(self._getCommand(), self._getOptions(url))
+    })
+  }
+}
+
+OperaBrowser = function (baseBrowserDecorator, args) {
+  baseBrowserDecorator(this)
+
+  var flags = args.flags || []
+
+  this._getOptions = function (url) {
+    // Opera CLI options
+    // http://peter.sh/experiments/chromium-command-line-switches/
+    flags.forEach(function (flag, i) {
+      if (isJSFlags(flag)) flags[i] = sanitizeJSFlags(flag)
+    })
+
+    return [
+      '--user-data-dir=' + this._tempDir,
+      '--no-default-browser-check',
+      '--no-first-run',
+      '--disable-default-apps',
+      '--disable-popup-blocking',
+      '--disable-translate',
+      '--new-window'
+    ].concat(flags, [url])
+  }
+}
+
+DEFAULT_CMD = {
+  linux: 'opera',
+  darwin: '/Applications/Opera.app/Contents/MacOS/Opera',
+  win32: findWindowsOperaExecutable()
+}
+
+OperaClassicBrowser.prototype = {
+  name: 'OperaClassic',
+
+  DEFAULT_CMD: DEFAULT_CMD,
   ENV_CMD: 'OPERA_BIN'
 }
 
-OperaBrowser.$inject = ['baseBrowserDecorator']
+OperaClassicBrowser.$inject = ['baseBrowserDecorator']
+
+OperaBrowser.prototype = {
+  name: 'Opera',
+
+  DEFAULT_CMD: DEFAULT_CMD,
+  ENV_CMD: 'OPERA_BIN'
+}
+
+OperaBrowser.$inject = ['baseBrowserDecorator', 'args']
 
 // PUBLISH DI MODULE
 module.exports = {
+  'launcher:OperaClassic': ['type', OperaClassicBrowser],
   'launcher:Opera': ['type', OperaBrowser]
 }

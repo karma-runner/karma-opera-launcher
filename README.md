@@ -16,6 +16,18 @@ npm install karma-opera-launcher --save-dev
 ```
 
 ## Configuration
+
+#### Opera Classic (up to and including v12)
+```js
+// karma.conf.js
+module.exports = function(config) {
+  config.set({
+    browsers: ['OperaClassic']
+  });
+};
+```
+
+#### Opera (v15 and above)
 ```js
 // karma.conf.js
 module.exports = function(config) {
@@ -27,7 +39,7 @@ module.exports = function(config) {
 
 You can pass list of browsers as a CLI argument too:
 ```bash
-karma start --browsers Opera
+karma start --browsers Opera,OperaClassic
 ```
 
 ----
