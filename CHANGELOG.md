@@ -1,3 +1,9 @@
+<a name="1.0.0"></a>
+# [1.0.0](https://github.com/karma-runner/karma-opera-launcher/compare/v0.3.0...v1.0.0) (2016-05-04)
+
+
+
+
 <a name="0.3.0"></a>
 # [0.3.0](https://github.com/karma-runner/karma-opera-launcher/compare/v0.2.0...v0.3.0) (2015-08-10)
 
