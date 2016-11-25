@@ -134,7 +134,8 @@ OperaBrowser = function (baseBrowserDecorator, args) {
       '--disable-default-apps',
       '--disable-popup-blocking',
       '--disable-translate',
-      '--new-window'
+      '--new-window',
+      '--ran-launcher'
     ].concat(flags, [url])
   }
 }
