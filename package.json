@@ -23,7 +23,7 @@
   "license": "MIT",
   "devDependencies": {
     "eslint": "^1.1.0",
-    "eslint-config-standard": "^4.0.0",
+    "eslint-config-standard": "^10.0.0",
     "grunt": "^0.4.1",
     "grunt-bump": "^0.3.1",
     "grunt-conventional-changelog": "^4.0.0",
